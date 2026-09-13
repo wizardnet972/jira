@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>How I built a Jira product with nx-domainify</title>
+  <meta name="description" content="A walkthrough of building a Jira-style Angular app with nx-domainify." />
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f6f3ee;
+      --fg: #1c1917;
+      --muted: #57534e;
+      --rule: #d6d3d1;
+      --code-bg: #ece7df;
+      --link: #1d4ed8;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1c1917;
+        --fg: #f5f0e8;
+        --muted: #a8a29e;
+        --rule: #44403c;
+        --code-bg: #292524;
+        --link: #93c5fd;
+      }
+    }
+    html { font-size: 18px; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+      line-height: 1.65;
+    }
+    main {
+      max-width: 42rem;
+      margin: 0 auto;
+      padding: 3.5rem 1.25rem 5rem;
+    }
+    .repo {
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0 0 2rem;
+    }
+    h1 {
+      font-size: 2.1rem;
+      line-height: 1.2;
+      font-weight: 650;
+      margin: 0 0 1.25rem;
+    }
+    h2 {
+      font-size: 1.25rem;
+      line-height: 1.3;
+      margin: 2.4rem 0 0.8rem;
+    }
+    p { margin: 0 0 1rem; }
+    a { color: var(--link); }
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.86em;
+    }
+    :not(pre) > code {
+      background: var(--code-bg);
+      padding: 0.12em 0.35em;
+      border-radius: 0.25rem;
+    }
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--rule);
+      border-radius: 0.5rem;
+      padding: 0.9rem 1rem;
+      overflow-x: auto;
+      line-height: 1.5;
+    }
+    pre code { background: none; padding: 0; }
+    footer {
+      margin-top: 3rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--rule);
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="repo"><a href="https://github.com/wizardnet972/jira">github.com/wizardnet972/jira</a></p>
+    <h1>How I built a Jira product with nx-domainify</h1>
+<p>This is the walkthrough behind <a href="https://github.com/wizardnet972/jira">wizardnet972/jira</a>. It is a Jira-style Angular app whose libraries were generated with <a href="https://github.com/wizardnet972/nx-domainify">nx-domainify</a>, not hand-grown folders.</p>
+<p>I am writing it the way I actually worked: product language first, generators second, fights with boundaries in the middle.</p>
+<h2>Why I am talking to you like this</h2>
+<p>Most Nx articles start at <code>project.json</code>. That is the wrong end of the stick for a domain-driven app.</p>
+<p>If you start with folders, you will invent a <code>shared</code> domain, put half the product in it, and then spend a week arguing with ESLint. If you start with the product — what a project is, what an issue is, who owns a sprint — the libraries almost name themselves.</p>
+<p>nx-domainify does not design the product for you. It only makes the design expensive to cheat.</p>
+<h2>I did not start with folders or generators</h2>
+<p>I did not open the monorepo and ask “what libs do I need?”</p>
+<p>I asked what a delivery team actually does in Jira. They keep a project. They file issues against it. They arrange those issues on a board. They commit a slice of work to a sprint.</p>
+<p>That is four conversations, not one “app module.” Only after those words were stable did I run a generator.</p>
+<h2>Strategic design: what is this product actually about?</h2>
+<p>This demo is not “a clone of Jira Cloud.” It is a thin delivery surface. You pick a project, see its board, create and move issues, then plan and report on a sprint.</p>
+<p>Everything else is decoration. Search lives in the shell because people search from anywhere. Theme and sidebar collapse live in the shell because they are chrome, not product language.</p>
+<p>If a screen did not change how work moves through a project, it did not become a domain.</p>
+<h2>Finding the language of the business</h2>
+<p>I kept the ubiquitous language small and boring on purpose. A project is the container: key, name, lead. An issue is the unit of work: key, type, status, priority, points, assignee. A board is the current view of issues in columns. A sprint is a time-boxed set of issues, with a state of future, active, or closed.</p>
+<p>I refused words that sounded architectural. There is no “module,” “widget,” or “shared kernel domain” in the product language. Those are workspace words.</p>
+<h2>Drawing bounded contexts — and throwing some away</h2>
+<p>The first sketch had more contexts than the repo. I had users, search, notifications, workflow, reporting, and settings. Most of those collapsed.</p>
+<p>Users are records the project lead and issue assignee point at. They do not have their own screens, so they are not a domain. Search is a query over issues, used by the shell. Workflow is <code>todo → in-progress → in-review → done</code> on an issue. Reporting is a sprint view. Settings is a project feature.</p>
+<p>Throwing contexts away is the useful part of DDD. The leftover four still had to stand alone.</p>
+<h2>Why I kept four domains, not seven</h2>
+<p><code>project</code>, <code>issue</code>, <code>board</code>, and <code>sprint</code> each have a reason to change. Project changes when the container changes: name, lead, list, create. Issue changes when work items change: create, detail, transition. Board changes when layout changes: columns, WIP, backlog. Sprint changes when the time-box changes: start, remaining days, velocity.</p>
+<p>A fifth product domain would have been vanity. A “users” domain with no feature is a table, not a context. A “search” domain is a method on issues. A “workflow” domain is a status enum.</p>
+<p>I later added <code>shell</code> for the application chrome: sidenav, theme, project switcher, layout outlet. Shell is not a Jira concept. It is the host. It may depend on shared UI and the shared data kernel. It may not import <code>project</code>, <code>issue</code>, <code>board</code>, or <code>sprint</code>.</p>
+<h2>Shared is not a fifth product domain</h2>
+<p>This was the rule I had to repeat the most: there is no <code>shared</code> domain.</p>
+<p>Shared is only kits. The UI kit is button, avatar, badge, empty-state, icon, and card. The util kit is dates, format, id, query-params, and data.</p>
+<p><code>@jira/util-data</code> is the kernel: <code>JiraStore</code>, <code>JiraClient</code>, <code>jiraKeys</code>. It holds in-memory projects, issues, boards, sprints, and users. Every domain talks to that kernel. No domain talks to another domain.</p>
+<p>The first time I let board import <code>@jira/issue-ui-card</code>, the isolation story was a lie. Board and sprint now render a dumb <code>@jira/ui-card</code>. Issue still owns <code>issue-ui-card</code>. Domain UI stays inside its domain.</p>
+<h2>How I mapped DDD onto nx-domainify tags</h2>
+<p><code>nx-domainify:init</code> writes ESLint <code>depConstraints</code>. I used them as the architecture, not as decoration.</p>
+<p>Type flows downhill. <code>type:app</code> may reach api, feature, ui, domain-logic, and util. <code>type:feature</code> and <code>type:api</code> may reach ui, domain-logic, and util. <code>type:ui</code> may reach domain-logic and util. <code>type:domain-logic</code> may reach domain-logic and util. <code>type:util</code> may only reach util.</p>
+<p>Domain flows stay home. <code>domain:shared</code> may only reach <code>domain:shared</code>. <code>domain:project</code> may reach <code>domain:project</code> and <code>domain:shared</code>. Issue, board, sprint, and shell follow the same pattern.</p>
+<p>Features cannot import <code>type:api</code>. Facades live in <code>type:domain-logic</code> and talk to infrastructure services, which talk to <code>JiraClient</code>.</p>
+<p>I originally tagged domain UI as <code>scope:shareable</code> so board could reuse the issue card. That coupled the domains. I removed the tag and the constraint. Isolation is now the default, not an option.</p>
+<h2>Creating the Angular monorepo</h2>
+<p>The workspace is a normal Nx 23 Angular app. I started there, then used the plugin for every domain artifact. I did not use <code>@nx/angular:library</code> to place those libraries.</p>
+<pre><code class="language-sh">npx create-nx-workspace@latest jira --preset=angular-monorepo
+</code></pre>
+<h2>Installing the plugin and running <code>init</code></h2>
+<pre><code class="language-sh">pnpm add -D nx-domainify
+pnpm exec nx g nx-domainify:init
+</code></pre>
+<p><code>init</code> does two things I actually used. It writes the DDD ESLint constraints. It also installs an agent skill at <code>.cursor/skills/nx-domainify-generate</code>, and the Claude copy. The skill is blunt: prefer <code>nx-domainify:*</code>, run <code>--help</code> when a flag is unknown, and do not mkdir library folders by hand.</p>
+<p>That last line saved the repo. Every time I was tempted to “just create the folder,” the skill said no.</p>
+<h2>The first domain landed at the workspace root</h2>
+<p>The first <code>nx-domainify:domain</code> in a fresh workspace wants to land at the root. Pass <code>--directory=libs</code> on that first domain only. Later domains inherit <code>libsDir</code>.</p>
+<pre><code class="language-sh">pnpm exec nx g nx-domainify:domain project --directory=libs
+</code></pre>
+<p>I learned this by generating once in the wrong place and removing the project with <code>@nx/workspace:remove</code>. Do not delete library folders by hand and hope Nx forgets them.</p>
+<h2>Generating in order: domain, then everything else</h2>
+<p>Order is not style. The feature generator writes a facade into the domain library. The domain has to exist first.</p>
+<p>I generated issue the way I generated the rest of the product. Domain first, then the screens, then the API if the context actually needed one.</p>
+<pre><code class="language-sh">pnpm exec nx g nx-domainify:domain issue
+pnpm exec nx g nx-domainify:feature list --domain=issue
+pnpm exec nx g nx-domainify:feature detail --domain=issue
+pnpm exec nx g nx-domainify:feature create --domain=issue
+pnpm exec nx g nx-domainify:api issues --domain=issue
+</code></pre>
+<p>UI and util omit <code>--domain</code> when they belong in shared.</p>
+<pre><code class="language-sh">pnpm exec nx g nx-domainify:ui button --directory=ui --skipPrefix
+pnpm exec nx g nx-domainify:util data --directory=util --skipPrefix
+</code></pre>
+<p>Without <code>--skipPrefix</code> you get <code>libs/shared/ui/ui-button</code>. With it you get <code>libs/shared/ui/button</code>.</p>
+<p>Project got list, create, and settings, plus a card, a header, and key/filters utils. Issue got list, detail, and create, plus the <code>issues</code> API, a card, a status, and key/priority utils. Board got view, configure, and backlog, plus a column and layout/wip utils. Sprint got active, planning, and report, plus a header, a burndown, and dates/velocity utils. Shell got layout, then appearance and workspace infrastructure.</p>
+<h2>UI libraries are empty on purpose</h2>
+<p><code>nx-domainify:ui</code> creates the library, tags, and path. It does not create a component. That is correct. A UI kit should be a decision you make after the library exists, with <code>@nx/angular:component --export</code>.</p>
+<p>I ran that second command for every visual: button, avatar, badge, empty-state, icon, card, plus the domain cards and headers.</p>
+<p>Shared UI stays dumb. Inputs are strings and numbers. No <code>Issue</code> type, no facade, no query. If the card needs <code>priorityLabel</code>, that knowledge belongs in the issue domain, not in <code>@jira/ui-card</code>.</p>
+<h2>Filling the kernel: one store, many facades</h2>
+<p><code>JiraStore</code> is an in-memory signal store. <code>JiraClient</code> is the async port: every method returns a <code>Promise</code>, even though the data is local. That let facades and infrastructure use TanStack Query as if a backend existed. <code>jiraKeys</code> is the query-key catalog. Mutations invalidate <code>jiraKeys.all</code> or a narrower key.</p>
+<p>The first version put <code>injectQuery</code> and <code>injectMutation</code> in every facade. List and settings both listed projects. Active, planning, and report all listed sprints. That is the same service written three times.</p>
+<p>I moved the shared query and write paths into domain infrastructure. <code>ProjectsService</code> feeds list, create, and settings. <code>IssuesService</code> feeds list, detail, and create. <code>BoardService</code> feeds view, backlog, and configure. <code>SprintsService</code> feeds active, planning, and report. <code>WorkspaceService</code> and <code>AppearanceService</code> feed the shell layout.</p>
+<p>Facades still exist. They map data for one screen: filter projects, stack board columns, compute velocity. They do not own the HTTP-shaped port.</p>
+<p>I do not use <code>effect</code> to hydrate forms. Settings uses <code>linkedSignal</code> so the fields follow the current project and the template can still call <code>facade.name.set(...)</code>. Privates are <code>#client</code>, <code>#queryClient</code>, <code>#store</code>. Templates call signals directly. Methods stay for real work: <code>save</code>, <code>move</code>, <code>plan</code>, <code>open</code>, <code>setWip</code>, <code>toggleTheme</code>.</p>
+<h2>Why the only API sits on the issue domain</h2>
+<p>Features cannot import <code>type:api</code>. That is the constraint, and it is the point.</p>
+<p>Issue is the only context that needed an explicit application API. <code>IssuesApi</code> is a named port over <code>JiraClient</code>. The other domains call <code>JiraClient</code> from their own infrastructure. That is enough for a demo.</p>
+<p>I did not create <code>ProjectsApi</code> or <code>SprintsApi</code> just to make the diagram symmetric. An API library is for a boundary you intend to keep when the client is no longer in-memory. Issue is the one I would extract first.</p>
+<h2>Boundary fights I actually hit</h2>
+<p>The first domain landed at the root. <code>--directory=libs</code> once. Then I stopped thinking about it.</p>
+<p>Board wanted the issue card. I let it, then undid it. Cross-domain UI is coupling with extra steps. Shared UI is the escape hatch, and it must stay dumb.</p>
+<p>Shell wanted to be the app. I built the sidenav in <code>apps/jira</code>, and that made the app a feature. The app is now <code>&lt;router-outlet /&gt;</code> plus routes. The layout is <code>@jira/shell-feature-layout</code>. Routes load the shell as the parent and lazy-load domain features as children.</p>
+<p>Search imported <code>IssuesApi</code> from the shell facade. Features and domain-logic cannot import <code>type:api</code>. Shell search now goes through <code>JiraClient.searchIssues</code>. The issue API stays inside the issue domain.</p>
+<p>Facades grew effects and wrappers. <code>effect</code> to copy project fields into inputs was the wrong primitive. <code>linkedSignal</code> is the copy that stays in sync. Setters that only wrap <code>signal.set</code> were noise. The template already has the signal.</p>
+<h2>Composing screens without cheating</h2>
+<p>A feature class is boring on purpose.</p>
+<pre><code class="language-ts">export class View {
+  facade = inject(ViewFacade);
+}
+</code></pre>
+<p>The feature owns the template and the providers. The facade owns the screen model. The infrastructure service owns the queries.</p>
+<p>The app does not compose screens. It composes routes.</p>
+<pre><code class="language-ts">{
+  path: &#39;&#39;,
+  loadComponent: () =&gt; import(&#39;@jira/shell-feature-layout&#39;).then((m) =&gt; m.Layout),
+  children: [
+    { path: &#39;&#39;, pathMatch: &#39;full&#39;, redirectTo: &#39;board&#39; },
+    ...projectRoutes,
+    ...issueRoutes,
+    ...boardRoutes,
+    ...sprintRoutes,
+  ],
+}
+</code></pre>
+<p>If I needed an issue card on the board, I did not import the issue feature. I passed primitives into <code>@jira/ui-card</code>. That is composition without a domain import.</p>
+<h2>Making it look like Jira</h2>
+<p>Look is Tailwind v4 in the templates. Global tokens live in <code>apps/jira/src/styles.css</code> as <code>--jira-*</code> CSS variables, mapped in <code>@theme</code>. Dark mode is <code>html.dark</code> plus <code>@custom-variant dark (&amp;:where(.dark, .dark *));</code>. A boot script in <code>index.html</code> applies the stored theme before paint.</p>
+<p>I tried a navy slab sidebar, then a floating rounded card. The one that matched the product was a flush light rail: icon plus label, search in the sidebar, collapse control at the top, avatar at the bottom. Workspace and Projects are sections with chevrons that actually collapse.</p>
+<p>Feature CSS is almost always <code>:host { display: block }</code>. If the look needed a page-level class, it went into the HTML.</p>
+<h2>What I would copy, and what I would not</h2>
+<p>Copy the order. Product language before generators. Domain, then feature, then UI component. One shared data kernel, not a shared domain. Infrastructure services when two facades share the same queries. The app as routes and an outlet. The shell as a feature. ESLint as the architecture.</p>
+<p>Do not copy the in-memory store, except as a spike. Replace <code>JiraClient</code> and keep the facades. Do not invent symmetric API libraries you do not have. Do not use <code>scope:shareable</code> as a way to “reuse” another domain’s UI. Do not put logic in feature components, or effects that only copy signals.</p>
+<h2>A checklist you can run tomorrow</h2>
+<p>Write the product words on paper. Delete any that are not a reason to change. Run <code>nx g nx-domainify:init</code>. Generate the first domain with <code>--directory=libs</code>. For each remaining context, generate the domain, then the features, then the domain UI and util. Shared kits omit <code>--domain</code> and take <code>--directory=ui</code> or <code>--directory=util</code> with <code>--skipPrefix</code>. After each UI library, run <code>@nx/angular:component --export</code>.</p>
+<p>Put the store and client in shared util, not in a shared domain. Keep <code>injectQuery</code> in domain infrastructure when more than one facade needs the same key. Put chrome in a shell feature. Leave <code>apps/&lt;name&gt;</code> as routes and <code>&lt;router-outlet /&gt;</code>.</p>
+<p>Run <code>nx run-many -t lint</code>. If a domain imports another domain, you cheated. Undo it.</p>
+<p>The repo is the worked example: <a href="https://github.com/wizardnet972/jira">github.com/wizardnet972/jira</a>. The plugin is <a href="https://github.com/wizardnet972/nx-domainify">github.com/wizardnet972/nx-domainify</a>.</p>
+    <footer>
+      Walkthrough for the <a href="https://github.com/wizardnet972/jira">jira</a> repo, generated with
+      <a href="https://github.com/wizardnet972/nx-domainify">nx-domainify</a>.
+    </footer>
+  </main>
+</body>
+</html>
