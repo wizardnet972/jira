@@ -1,0 +1,30 @@
+<section class="grid gap-3">
+  <header class="flex items-center justify-between">
+    <h1 class="m-0 text-2xl font-semibold text-jira-navy">Issues</h1>
+    <a routerLink="/issues/create"><ui-button label="Create issue" /></a>
+  </header>
+  <input
+    class="w-80 max-w-full rounded border border-jira-border bg-jira-surface px-3 py-2 text-[13px] outline-none focus:border-jira-blue"
+    placeholder="Search issues"
+    (input)="facade.query.set($any($event.target).value)"
+  />
+  @if (facade.issues().length === 0) {
+    <ui-empty-state title="No issues" message="Create an issue or change the search." />
+  } @else {
+    <div class="grid gap-3">
+      @for (issue of facade.issues(); track issue.id) {
+        <a class="text-inherit no-underline" [routerLink]="['/issues', issue.id]">
+          <issue-card
+            [issueKey]="issue.key"
+            [title]="issue.title"
+            [type]="issue.type"
+            [status]="issue.status"
+            [priority]="issue.priority"
+            [assigneeName]="issue.assignee?.name || ''"
+            [points]="issue.storyPoints"
+          />
+        </a>
+      }
+    </div>
+  }
+</section>

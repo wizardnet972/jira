@@ -1,0 +1,20 @@
+{
+  "name": "sprint-feature-active",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/sprint/feature-active/src",
+  "prefix": "sprint",
+  "projectType": "library",
+  "tags": ["domain:sprint", "type:feature"],
+  "targets": {
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "coverage/libs/sprint/feature-active"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

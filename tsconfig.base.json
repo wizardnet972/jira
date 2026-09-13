@@ -14,7 +14,81 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "strict": false,
-    "paths": {}
+    "paths": {
+      "@jira/project-domain": ["./libs/project/domain/src/index.ts"],
+      "@jira/issue-domain": ["./libs/issue/domain/src/index.ts"],
+      "@jira/board-domain": ["./libs/board/domain/src/index.ts"],
+      "@jira/sprint-domain": ["./libs/sprint/domain/src/index.ts"],
+      "@jira/project-feature-list": [
+        "./libs/project/feature-list/src/index.ts"
+      ],
+      "@jira/project-feature-create": [
+        "./libs/project/feature-create/src/index.ts"
+      ],
+      "@jira/project-feature-settings": [
+        "./libs/project/feature-settings/src/index.ts"
+      ],
+      "@jira/issue-feature-list": ["./libs/issue/feature-list/src/index.ts"],
+      "@jira/issue-feature-detail": [
+        "./libs/issue/feature-detail/src/index.ts"
+      ],
+      "@jira/issue-feature-create": [
+        "./libs/issue/feature-create/src/index.ts"
+      ],
+      "@jira/board-feature-view": ["./libs/board/feature-view/src/index.ts"],
+      "@jira/board-feature-configure": [
+        "./libs/board/feature-configure/src/index.ts"
+      ],
+      "@jira/board-feature-backlog": [
+        "./libs/board/feature-backlog/src/index.ts"
+      ],
+      "@jira/sprint-feature-active": [
+        "./libs/sprint/feature-active/src/index.ts"
+      ],
+      "@jira/sprint-feature-planning": [
+        "./libs/sprint/feature-planning/src/index.ts"
+      ],
+      "@jira/sprint-feature-report": [
+        "./libs/sprint/feature-report/src/index.ts"
+      ],
+      "@jira/issue-api-issues": ["./libs/issue/api-issues/src/index.ts"],
+      "@jira/project-ui-card": ["./libs/project/ui/card/src/index.ts"],
+      "@jira/project-ui-header": ["./libs/project/ui/header/src/index.ts"],
+      "@jira/issue-ui-card": ["./libs/issue/ui/card/src/index.ts"],
+      "@jira/issue-ui-status": ["./libs/issue/ui/status/src/index.ts"],
+      "@jira/board-ui-column": ["./libs/board/ui/column/src/index.ts"],
+      "@jira/sprint-ui-header": ["./libs/sprint/ui/header/src/index.ts"],
+      "@jira/sprint-ui-burndown": ["./libs/sprint/ui/burndown/src/index.ts"],
+      "@jira/project-util-key": ["./libs/project/util/key/src/index.ts"],
+      "@jira/project-util-filters": [
+        "./libs/project/util/filters/src/index.ts"
+      ],
+      "@jira/issue-util-key": ["./libs/issue/util/key/src/index.ts"],
+      "@jira/issue-util-priority": ["./libs/issue/util/priority/src/index.ts"],
+      "@jira/board-util-layout": ["./libs/board/util/layout/src/index.ts"],
+      "@jira/board-util-wip": ["./libs/board/util/wip/src/index.ts"],
+      "@jira/sprint-util-dates": ["./libs/sprint/util/dates/src/index.ts"],
+      "@jira/sprint-util-velocity": [
+        "./libs/sprint/util/velocity/src/index.ts"
+      ],
+      "@jira/ui-button": ["./libs/shared/ui/button/src/index.ts"],
+      "@jira/ui-avatar": ["./libs/shared/ui/avatar/src/index.ts"],
+      "@jira/ui-badge": ["./libs/shared/ui/badge/src/index.ts"],
+      "@jira/ui-empty-state": ["./libs/shared/ui/empty-state/src/index.ts"],
+      "@jira/util-dates": ["./libs/shared/util/dates/src/index.ts"],
+      "@jira/util-format": ["./libs/shared/util/format/src/index.ts"],
+      "@jira/util-id": ["./libs/shared/util/id/src/index.ts"],
+      "@jira/util-query-params": [
+        "./libs/shared/util/query-params/src/index.ts"
+      ],
+      "@jira/util-data": ["./libs/shared/util/data/src/index.ts"],
+      "@jira/ui-icon": ["./libs/shared/ui/icon/src/index.ts"],
+      "@jira/shell-domain": ["./libs/shell/domain/src/index.ts"],
+      "@jira/shell-feature-layout": [
+        "./libs/shell/feature-layout/src/index.ts"
+      ],
+      "@jira/ui-card": ["./libs/shared/ui/card/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

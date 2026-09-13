@@ -1,0 +1,14 @@
+<span
+  class="inline-flex rounded-[3px] px-1.5 py-0.5 text-[11px] font-semibold"
+  [class]="
+    status() === 'done'
+      ? 'bg-[#dcfff1] text-[#216e4e]'
+      : status() === 'in-progress'
+        ? 'bg-[#e9f2ff] text-jira-blue'
+        : status() === 'in-review'
+          ? 'bg-[#fff7d6] text-[#974f0c]'
+          : 'bg-jira-column text-jira-muted'
+  "
+>
+  {{ titleCase(status()) }}
+</span>

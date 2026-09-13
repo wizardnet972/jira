@@ -1,0 +1,20 @@
+{
+  "name": "project-feature-create",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/project/feature-create/src",
+  "prefix": "project",
+  "projectType": "library",
+  "tags": ["domain:project", "type:feature"],
+  "targets": {
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "coverage/libs/project/feature-create"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

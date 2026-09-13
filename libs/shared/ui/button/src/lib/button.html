@@ -1,0 +1,15 @@
+<button
+  class="cursor-pointer rounded-[3px] px-3 py-1.5 text-[13px] font-medium disabled:cursor-not-allowed disabled:opacity-50"
+  [class]="
+    variant() === 'subtle'
+      ? 'bg-jira-column text-jira-navy hover:bg-jira-subtle-hover'
+      : variant() === 'danger'
+        ? 'bg-[#c9372c] text-white hover:bg-[#ae2e24]'
+        : 'bg-jira-blue text-white hover:bg-jira-blue-hover'
+  "
+  [attr.type]="type()"
+  [disabled]="disabled()"
+  (click)="pressed.emit()"
+>
+  {{ label() }}
+</button>

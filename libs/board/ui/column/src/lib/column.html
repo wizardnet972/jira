@@ -1,0 +1,7 @@
+<section class="flex min-w-[260px] flex-col gap-2.5 rounded-[10px] bg-jira-column p-3" [class.outline]="overLimit()" [class.outline-2]="overLimit()" [class.outline-[#c9372c]]="overLimit()">
+  <header class="flex items-center justify-between">
+    <h3 class="m-0 text-[13px] font-semibold text-jira-navy">{{ name() }}</h3>
+    <span class="rounded bg-jira-surface px-1.5 py-0.5 text-[11px] font-semibold text-jira-muted">{{ wipLimit() ? count() + '/' + wipLimit() : count() }}</span>
+  </header>
+  <ng-content />
+</section>

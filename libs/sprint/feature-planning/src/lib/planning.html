@@ -1,0 +1,12 @@
+<section class="grid gap-4">
+  <h1 class="m-0 text-2xl font-semibold text-jira-navy">Sprint planning</h1>
+  @for (sprint of facade.sprints(); track sprint.id) {
+    <article class="grid gap-3 rounded-lg border border-jira-border bg-jira-surface p-4">
+      <sprint-header [name]="sprint.name" [goal]="sprint.goal" [range]="sprint.range" [state]="sprint.state" />
+      <p class="m-0 text-[13px] text-jira-muted">{{ sprint.points }} story points committed</p>
+      @if (sprint.state === 'future') {
+        <ui-button label="Start sprint" (pressed)="facade.start(sprint.id)" />
+      }
+    </article>
+  }
+</section>

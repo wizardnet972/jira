@@ -1,0 +1,30 @@
+<section class="grid gap-4">
+  <header class="flex items-start justify-between gap-4">
+    <div>
+      <h1 class="m-0 text-2xl font-semibold text-jira-navy">Backlog</h1>
+      <p class="m-0 mt-1 text-[13px] text-jira-muted">{{ facade.nextSprint()?.name || 'No future sprint' }} is the next planning bucket.</p>
+    </div>
+    <a routerLink="/issues/create"><ui-button label="Create issue" /></a>
+  </header>
+  @if (facade.backlog().length === 0) {
+    <ui-empty-state title="Backlog is empty" message="Everything is already in a sprint." />
+  } @else {
+    <div class="grid gap-3">
+      @for (issue of facade.backlog(); track issue.id) {
+        <div class="grid grid-cols-[1fr_auto] items-center gap-3">
+          <a class="text-inherit no-underline" [routerLink]="['/issues', issue.id]">
+            <ui-card
+              [key]="issue.key"
+              [title]="issue.title"
+              [type]="issue.type"
+              [status]="issue.status"
+              [meta]="issue.storyPoints + ' pts'"
+              [assigneeName]="issue.assignee?.name || ''"
+            />
+          </a>
+          <ui-button label="Plan" variant="subtle" (pressed)="facade.plan(issue.id)" />
+        </div>
+      }
+    </div>
+  }
+</section>

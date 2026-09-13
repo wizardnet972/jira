@@ -1,0 +1,20 @@
+{
+  "name": "issue-ui-card",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/issue/ui/card/src",
+  "prefix": "issue",
+  "projectType": "library",
+  "tags": ["domain:issue", "type:ui"],
+  "targets": {
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "coverage/libs/issue/ui/card"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+<section class="grid gap-4">
+  @if (facade.sprint(); as sprint) {
+    <sprint-header [name]="sprint.name + ' report'" [goal]="sprint.goal" [state]="sprint.state" />
+    <sprint-burndown
+      [remaining]="facade.stats().remaining"
+      [completed]="facade.stats().completed"
+      [committed]="facade.stats().committed"
+    />
+    <ui-badge [label]="'Velocity ' + facade.stats().velocity" tone="blue" />
+  } @else {
+    <ui-empty-state title="No sprint to report" message="Start a sprint to see remaining and completed points." />
+  }
+</section>

@@ -1,0 +1,20 @@
+{
+  "name": "sprint-util-velocity",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/sprint/util/velocity/src",
+  "prefix": "sprint",
+  "projectType": "library",
+  "tags": ["domain:sprint", "type:util"],
+  "targets": {
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "coverage/libs/sprint/util/velocity"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+<article class="grid gap-2.5 rounded-lg border border-jira-border bg-jira-surface p-4 shadow-sm">
+  <header class="flex items-center justify-between gap-2">
+    <strong class="text-[15px] text-jira-navy">{{ name() }}</strong>
+    <span class="rounded bg-jira-chip-blue px-1.5 py-0.5 text-[11px] font-semibold text-jira-blue">{{ projectKey() }}</span>
+  </header>
+  <p class="m-0 text-[13px] text-jira-muted">{{ description() }}</p>
+  <footer class="flex items-center justify-between text-[12px] text-jira-subtle">
+    <span class="capitalize">{{ type() }}</span>
+    <span>{{ leadInitials() }} · {{ leadName() }}</span>
+  </footer>
+</article>

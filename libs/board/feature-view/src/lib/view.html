@@ -1,0 +1,30 @@
+<section class="grid gap-4">
+  <header class="flex items-start justify-between gap-4">
+    <div>
+      <h1 class="m-0 text-2xl font-semibold text-jira-navy">{{ facade.board().name }}</h1>
+      <p class="m-0 mt-1 text-[13px] text-jira-muted">{{ facade.project().key }} · {{ facade.project().name }}</p>
+    </div>
+    <a routerLink="/board/configure"><ui-button label="Configure board" variant="subtle" /></a>
+  </header>
+  <div class="flex gap-3 overflow-auto pb-3">
+    @for (column of facade.columns(); track column.id) {
+      <board-column [name]="column.name" [count]="column.cards.length" [wipLimit]="column.wipLimit" [overLimit]="column.overLimit">
+        @for (card of column.cards; track card.id) {
+          <a class="text-inherit no-underline" [routerLink]="['/issues', card.id]">
+            <ui-card
+              [key]="card.key"
+              [title]="card.title"
+              [type]="card.type"
+              [status]="card.status"
+              [meta]="card.storyPoints + ' pts'"
+              [assigneeName]="card.assignee?.name || ''"
+            />
+          </a>
+          @if (column.nextStatus; as status) {
+            <ui-button [label]="'Move to ' + status" variant="subtle" (pressed)="facade.move(card.id, status)" />
+          }
+        }
+      </board-column>
+    }
+  </div>
+</section>

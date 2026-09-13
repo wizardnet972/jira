@@ -1,0 +1,216 @@
+<div class="flex min-h-screen bg-jira-bg">
+  <aside
+    class="flex shrink-0 flex-col border-r border-jira-border bg-jira-sidebar px-2 py-3 text-jira-navy"
+    [class.px-3]="!facade.sidebarCollapsed()"
+    [style.width.px]="facade.sidebarCollapsed() ? 56 : 252"
+  >
+    <div
+      class="mb-2 flex items-center"
+      [class.justify-center]="facade.sidebarCollapsed()"
+      [class.justify-between]="!facade.sidebarCollapsed()"
+    >
+      @if (!facade.sidebarCollapsed()) {
+        <a routerLink="/board" class="flex min-w-0 items-center gap-2 text-jira-navy no-underline">
+          <span class="grid size-6 shrink-0 place-items-center rounded-full bg-jira-blue text-[10px] font-black text-white">J</span>
+          <span class="truncate text-[13px] font-medium">{{ facade.currentProject().name }}</span>
+          <ui-icon name="chevron" />
+        </a>
+      }
+      <button
+        type="button"
+        class="grid size-8 shrink-0 cursor-pointer place-items-center rounded-lg border-0 bg-transparent text-jira-subtle hover:bg-jira-sidebar-hover hover:text-jira-navy"
+        [title]="facade.sidebarCollapsed() ? 'Expand menu' : 'Minimize menu'"
+        (click)="facade.toggleSidebar()"
+      >
+        <ui-icon name="panel" />
+      </button>
+    </div>
+
+    <div class="relative mb-2">
+      @if (facade.sidebarCollapsed()) {
+        <button
+          type="button"
+          class="mx-auto grid size-8 place-items-center rounded-lg border-0 bg-transparent text-jira-subtle hover:bg-jira-sidebar-hover hover:text-jira-navy"
+          title="Search issues"
+          (click)="facade.toggleSidebar()"
+        >
+          <ui-icon name="search" />
+        </button>
+      } @else {
+        <label class="flex items-center gap-2 rounded-lg bg-jira-bg px-2.5 py-1.5 text-jira-subtle">
+          <ui-icon name="search" />
+          <input
+            class="w-full border-0 bg-transparent p-0 text-[13px] text-jira-navy outline-none"
+            placeholder="Search issues"
+            [value]="facade.query()"
+            (input)="facade.query.set($any($event.target).value)"
+          />
+          <span class="text-[12px] text-jira-subtle">/</span>
+        </label>
+      }
+      @if (!facade.sidebarCollapsed() && facade.query() && facade.results().length) {
+        <div class="absolute inset-x-0 top-10 z-10 grid rounded-xl border border-jira-border bg-jira-surface shadow-lg">
+          @for (issue of facade.results(); track issue.id) {
+            <button
+              type="button"
+              class="bg-transparent px-3 py-2 text-left text-[13px] text-jira-navy hover:bg-jira-column"
+              (click)="facade.openIssue(issue.id)"
+            >
+              <span class="font-semibold text-jira-blue">{{ issue.key }}</span>
+              <span class="text-jira-muted"> · {{ issue.title }}</span>
+            </button>
+          }
+        </div>
+      }
+    </div>
+
+    <nav class="min-h-0 flex-1 overflow-y-auto">
+      <div class="grid gap-1.5">
+        @for (link of facade.mainLinks; track link.path) {
+          <a
+            [routerLink]="link.path"
+            routerLinkActive="bg-jira-sidebar-hover text-jira-navy"
+            [routerLinkActiveOptions]="{ exact: link.exact }"
+            class="flex items-center rounded-lg text-[13px] text-jira-sidebar-text no-underline hover:bg-jira-sidebar-hover hover:text-jira-navy"
+            [class.mx-auto]="facade.sidebarCollapsed()"
+            [class.size-8]="facade.sidebarCollapsed()"
+            [class.justify-center]="facade.sidebarCollapsed()"
+            [class.gap-2]="!facade.sidebarCollapsed()"
+            [class.px-2]="!facade.sidebarCollapsed()"
+            [class.py-2]="!facade.sidebarCollapsed()"
+            [title]="link.label"
+          >
+            <ui-icon [name]="link.icon" />
+            @if (!facade.sidebarCollapsed()) {
+              <span class="truncate">{{ link.label }}</span>
+            }
+          </a>
+        }
+      </div>
+
+      <div class="mt-5">
+        @if (facade.sidebarCollapsed()) {
+          <button
+            type="button"
+            class="mx-auto mb-2 flex h-px w-6 cursor-pointer border-0 bg-jira-border p-0"
+            title="Toggle workspace"
+            (click)="facade.toggleWorkspace()"
+          ></button>
+        } @else {
+          <div class="mb-2 flex items-center gap-1 px-2 text-[11px] font-medium tracking-wide text-jira-subtle">
+            <button
+              type="button"
+              class="flex flex-1 cursor-pointer items-center gap-1 border-0 bg-transparent p-0 text-inherit"
+              (click)="facade.toggleWorkspace()"
+            >
+              <ui-icon [name]="facade.workspaceOpen() ? 'chevron' : 'expand'" />
+              <span class="uppercase">Workspace</span>
+            </button>
+            <a routerLink="/projects/create" class="grid size-5 place-items-center text-jira-subtle no-underline hover:text-jira-navy" title="Create project">
+              <ui-icon name="plus" />
+            </a>
+          </div>
+        }
+        @if (facade.workspaceOpen()) {
+          <div class="grid gap-1.5">
+            @for (link of facade.workspaceLinks; track link.path) {
+              <a
+                [routerLink]="link.path"
+                routerLinkActive="bg-jira-sidebar-hover text-jira-navy"
+                [routerLinkActiveOptions]="{ exact: link.exact }"
+                class="flex items-center rounded-lg text-[13px] text-jira-sidebar-text no-underline hover:bg-jira-sidebar-hover hover:text-jira-navy"
+                [class.mx-auto]="facade.sidebarCollapsed()"
+                [class.size-8]="facade.sidebarCollapsed()"
+                [class.justify-center]="facade.sidebarCollapsed()"
+                [class.gap-2]="!facade.sidebarCollapsed()"
+                [class.px-2]="!facade.sidebarCollapsed()"
+                [class.py-2]="!facade.sidebarCollapsed()"
+                [title]="link.label"
+              >
+                <ui-icon [name]="link.icon" />
+                @if (!facade.sidebarCollapsed()) {
+                  <span class="truncate">{{ link.label }}</span>
+                }
+              </a>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="mt-5">
+        @if (facade.sidebarCollapsed()) {
+          <button
+            type="button"
+            class="mx-auto mb-2 flex h-px w-6 cursor-pointer border-0 bg-jira-border p-0"
+            title="Toggle projects"
+            (click)="facade.toggleProjects()"
+          ></button>
+        } @else {
+          <button
+            type="button"
+            class="mb-2 flex w-full cursor-pointer items-center gap-1 border-0 bg-transparent px-2 text-[11px] font-medium tracking-wide text-jira-subtle"
+            (click)="facade.toggleProjects()"
+          >
+            <ui-icon [name]="facade.projectsOpen() ? 'chevron' : 'expand'" />
+            <span class="uppercase">Projects</span>
+          </button>
+        }
+        @if (facade.projectsOpen()) {
+          <div class="grid gap-1.5">
+            @for (project of facade.projects(); track project.id; let i = $index) {
+              <button
+                type="button"
+                class="flex items-center rounded-lg border-0 bg-transparent text-[13px] text-jira-sidebar-text hover:bg-jira-sidebar-hover hover:text-jira-navy"
+                [class.mx-auto]="facade.sidebarCollapsed()"
+                [class.size-8]="facade.sidebarCollapsed()"
+                [class.justify-center]="facade.sidebarCollapsed()"
+                [class.w-full]="!facade.sidebarCollapsed()"
+                [class.gap-2]="!facade.sidebarCollapsed()"
+                [class.px-2]="!facade.sidebarCollapsed()"
+                [class.py-2]="!facade.sidebarCollapsed()"
+                [class.bg-jira-sidebar-hover]="project.id === facade.currentProject().id"
+                [class.text-jira-navy]="project.id === facade.currentProject().id"
+                [title]="project.name"
+                (click)="facade.selectProject(project.id)"
+              >
+                <span
+                  class="size-3.5 shrink-0 rounded"
+                  [style.background]="facade.projectColors[i % facade.projectColors.length]"
+                ></span>
+                @if (!facade.sidebarCollapsed()) {
+                  <span class="truncate">{{ project.name }}</span>
+                }
+              </button>
+            }
+          </div>
+        }
+      </div>
+    </nav>
+
+    <div
+      class="mt-2 flex items-center"
+      [class.flex-col]="facade.sidebarCollapsed()"
+      [class.justify-between]="!facade.sidebarCollapsed()"
+      [class.gap-2]="facade.sidebarCollapsed()"
+    >
+      <ui-avatar [initials]="facade.currentUser()?.initials || 'NA'" [name]="facade.currentUser()?.name || ''" />
+      <button
+        type="button"
+        class="grid size-8 cursor-pointer place-items-center rounded-lg border-0 bg-transparent text-jira-subtle hover:bg-jira-sidebar-hover hover:text-jira-navy"
+        [title]="facade.theme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
+        (click)="facade.toggleTheme()"
+      >
+        <ui-icon [name]="facade.theme() === 'dark' ? 'sun' : 'moon'" />
+      </button>
+    </div>
+  </aside>
+
+  <div class="grid min-w-0 flex-1 grid-rows-[56px_1fr]">
+    <header class="flex items-center justify-end px-6">
+      <a routerLink="/issues/create"><ui-button label="Create" /></a>
+    </header>
+    <main class="px-6 pb-6">
+      <router-outlet />
+    </main>
+  </div>
+</div>

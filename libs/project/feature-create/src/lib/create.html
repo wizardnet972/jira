@@ -1,0 +1,15 @@
+<section class="grid max-w-xl gap-3">
+  <h1 class="m-0 text-2xl font-semibold text-jira-navy">Create project</h1>
+  <label class="grid gap-1.5 text-[13px] text-jira-muted">Name <input class="rounded border border-jira-border px-3 py-2 text-jira-navy" [value]="facade.name()" (input)="facade.name.set($any($event.target).value)" /></label>
+  <label class="grid gap-1.5 text-[13px] text-jira-muted">Key <input class="rounded border border-jira-border px-3 py-2 text-jira-navy" [value]="facade.key()" (input)="facade.key.set($any($event.target).value)" /></label>
+  <p class="m-0 text-[13px] text-jira-subtle">Preview key: <span class="font-semibold text-jira-blue">{{ facade.previewKey() }}</span></p>
+  <label class="grid gap-1.5 text-[13px] text-jira-muted">Description <textarea class="min-h-[90px] rounded border border-jira-border px-3 py-2 text-jira-navy" [value]="facade.description()" (input)="facade.description.set($any($event.target).value)"></textarea></label>
+  <label class="grid gap-1.5 text-[13px] text-jira-muted">
+    Type
+    <select class="rounded border border-jira-border px-3 py-2 text-jira-navy" [value]="facade.type()" (change)="facade.type.set($any($event.target).value)">
+      <option value="software">Software</option>
+      <option value="business">Business</option>
+    </select>
+  </label>
+  <ui-button label="Create" (pressed)="facade.save()" />
+</section>

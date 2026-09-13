@@ -1,0 +1,32 @@
+<section class="grid gap-4">
+  <header class="flex items-start justify-between gap-4">
+    <div>
+      <h1 class="m-0 text-2xl font-semibold text-jira-navy">Projects</h1>
+      <p class="m-0 mt-1 text-[13px] text-jira-muted">Software and business spaces the team delivers from.</p>
+    </div>
+    <a routerLink="/projects/create"><ui-button label="Create project" /></a>
+  </header>
+  <input
+    class="w-80 max-w-full rounded border border-jira-border bg-jira-surface px-3 py-2 text-[13px] outline-none focus:border-jira-blue"
+    placeholder="Search projects"
+    (input)="facade.query.set($any($event.target).value)"
+  />
+  @if (facade.projects().length === 0) {
+    <ui-empty-state title="No projects" message="Create a project to start tracking work." />
+  } @else {
+    <div class="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4">
+      @for (project of facade.projects(); track project.id) {
+        <a class="text-inherit no-underline" [routerLink]="['/board']" (click)="facade.open(project.id)">
+          <project-card
+            [name]="project.name"
+            [projectKey]="project.key"
+            [description]="project.description"
+            [type]="project.type"
+            [leadName]="project.lead?.name || ''"
+            [leadInitials]="project.lead?.initials || ''"
+          />
+        </a>
+      }
+    </div>
+  }
+</section>

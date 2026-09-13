@@ -1,0 +1,20 @@
+{
+  "name": "board-util-layout",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/board/util/layout/src",
+  "prefix": "board",
+  "projectType": "library",
+  "tags": ["domain:board", "type:util"],
+  "targets": {
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "coverage/libs/board/util/layout"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

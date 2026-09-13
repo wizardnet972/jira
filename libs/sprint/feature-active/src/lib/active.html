@@ -1,0 +1,27 @@
+<section class="grid gap-4">
+  @if (facade.sprint(); as sprint) {
+    <sprint-header
+      [name]="sprint.name"
+      [goal]="sprint.goal"
+      [range]="facade.range()"
+      [state]="sprint.state"
+      [remainingDays]="facade.remainingDays()"
+    />
+    <div class="grid gap-3">
+      @for (issue of facade.issues(); track issue.id) {
+        <a class="text-inherit no-underline" [routerLink]="['/issues', issue.id]">
+          <ui-card
+            [key]="issue.key"
+            [title]="issue.title"
+            [type]="issue.type"
+            [status]="issue.status"
+            [meta]="issue.storyPoints + ' pts'"
+            [assigneeName]="issue.assignee?.name || ''"
+          />
+        </a>
+      }
+    </div>
+  } @else {
+    <ui-empty-state title="No active sprint" message="Start a sprint from planning." />
+  }
+</section>

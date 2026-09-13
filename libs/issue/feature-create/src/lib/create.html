@@ -1,0 +1,35 @@
+<section class="grid max-w-xl gap-3">
+  <h1 class="m-0 text-2xl font-semibold text-jira-navy">Create issue in {{ facade.project().key }}</h1>
+  <label class="grid gap-1.5 text-[13px] text-jira-muted">Summary <input class="rounded border border-jira-border px-3 py-2 text-jira-navy" [value]="facade.title()" (input)="facade.title.set($any($event.target).value)" /></label>
+  <label class="grid gap-1.5 text-[13px] text-jira-muted">Description <textarea class="min-h-[100px] rounded border border-jira-border px-3 py-2 text-jira-navy" [value]="facade.description()" (input)="facade.description.set($any($event.target).value)"></textarea></label>
+  <label class="grid gap-1.5 text-[13px] text-jira-muted">
+    Type
+    <select class="rounded border border-jira-border px-3 py-2 text-jira-navy" [value]="facade.type()" (change)="facade.type.set($any($event.target).value)">
+      <option value="story">Story</option>
+      <option value="task">Task</option>
+      <option value="bug">Bug</option>
+      <option value="epic">Epic</option>
+    </select>
+  </label>
+  <label class="grid gap-1.5 text-[13px] text-jira-muted">
+    Priority
+    <select class="rounded border border-jira-border px-3 py-2 text-jira-navy" [value]="facade.priority()" (change)="facade.priority.set($any($event.target).value)">
+      <option value="lowest">Lowest</option>
+      <option value="low">Low</option>
+      <option value="medium">Medium</option>
+      <option value="high">High</option>
+      <option value="highest">Highest</option>
+    </select>
+  </label>
+  <label class="grid gap-1.5 text-[13px] text-jira-muted">
+    Assignee
+    <select class="rounded border border-jira-border px-3 py-2 text-jira-navy" [value]="facade.assigneeId() || ''" (change)="facade.assigneeId.set($any($event.target).value || null)">
+      <option value="">Unassigned</option>
+      @for (user of facade.users(); track user.id) {
+        <option [value]="user.id">{{ user.name }}</option>
+      }
+    </select>
+  </label>
+  <label class="grid gap-1.5 text-[13px] text-jira-muted">Story points <input class="rounded border border-jira-border px-3 py-2 text-jira-navy" type="number" [value]="facade.storyPoints()" (input)="facade.storyPoints.set(+$any($event.target).value)" /></label>
+  <ui-button label="Create issue" (pressed)="facade.save()" />
+</section>

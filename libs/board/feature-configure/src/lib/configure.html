@@ -1,0 +1,15 @@
+<section class="grid max-w-xl gap-3">
+  <h1 class="m-0 text-2xl font-semibold text-jira-navy">Board configuration</h1>
+  <p class="m-0 text-[13px] text-jira-muted">Set WIP limits for the working columns. Leave empty for no limit.</p>
+  @for (column of facade.columns(); track column.id) {
+    <label class="grid gap-1.5 text-[13px] text-jira-muted">
+      {{ column.name }}
+      <input
+        class="rounded border border-jira-border px-3 py-2 text-jira-navy"
+        [value]="column.wipLimit ?? ''"
+        (change)="facade.setWip(column.id, $any($event.target).value)"
+      />
+    </label>
+  }
+  <ui-button label="Limits saved on change" variant="subtle" />
+</section>

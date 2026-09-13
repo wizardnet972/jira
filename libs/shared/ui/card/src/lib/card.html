@@ -1,0 +1,16 @@
+<article class="grid gap-2 rounded-lg border border-jira-border bg-jira-surface p-3 shadow-sm">
+  <header class="flex items-center justify-between gap-2">
+    <strong class="text-[12px] text-jira-blue">{{ key() }}</strong>
+    <span class="text-[11px] capitalize text-jira-subtle">{{ status() }}</span>
+  </header>
+  <p class="m-0 text-[13px] text-jira-navy">{{ title() }}</p>
+  <footer class="flex flex-wrap items-center gap-2 text-[11px] text-jira-subtle">
+    @if (type()) {
+      <span class="capitalize">{{ type() }}</span>
+    }
+    @if (meta()) {
+      <span>{{ meta() }}</span>
+    }
+    <span class="ml-auto">{{ assigneeName() || 'Unassigned' }}</span>
+  </footer>
+</article>

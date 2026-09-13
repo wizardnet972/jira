@@ -1,0 +1,20 @@
+{
+  "name": "issue-ui-status",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/issue/ui/status/src",
+  "prefix": "issue",
+  "projectType": "library",
+  "tags": ["domain:issue", "type:ui"],
+  "targets": {
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "coverage/libs/issue/ui/status"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

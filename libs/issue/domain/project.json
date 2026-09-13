@@ -1,0 +1,20 @@
+{
+  "name": "issue-domain",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/issue/domain/src",
+  "prefix": "issue-domain",
+  "projectType": "library",
+  "tags": ["domain:issue", "type:domain-logic"],
+  "targets": {
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "coverage/libs/issue/domain"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

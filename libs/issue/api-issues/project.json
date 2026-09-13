@@ -1,0 +1,20 @@
+{
+  "name": "issue-api-issues",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/issue/api-issues/src",
+  "prefix": "issue",
+  "projectType": "library",
+  "tags": ["domain:issue", "type:api"],
+  "targets": {
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "coverage/libs/issue/api-issues"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

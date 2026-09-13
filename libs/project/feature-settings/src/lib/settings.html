@@ -1,0 +1,15 @@
+<section class="grid max-w-2xl gap-3">
+  <project-header [name]="facade.project().name" [projectKey]="facade.project().key" [description]="facade.project().description" />
+  <h1 class="m-0 text-2xl font-semibold text-jira-navy">Project settings</h1>
+  <label class="grid gap-1.5 text-[13px] text-jira-muted">Name <input class="rounded border border-jira-border px-3 py-2 text-jira-navy" [value]="facade.name()" (input)="facade.name.set($any($event.target).value)" /></label>
+  <label class="grid gap-1.5 text-[13px] text-jira-muted">Description <textarea class="min-h-[90px] rounded border border-jira-border px-3 py-2 text-jira-navy" [value]="facade.description()" (input)="facade.description.set($any($event.target).value)"></textarea></label>
+  <label class="grid gap-1.5 text-[13px] text-jira-muted">
+    Lead
+    <select class="rounded border border-jira-border px-3 py-2 text-jira-navy" [value]="facade.leadId()" (change)="facade.leadId.set($any($event.target).value)">
+      @for (user of facade.users(); track user.id) {
+        <option [value]="user.id">{{ user.name }}</option>
+      }
+    </select>
+  </label>
+  <ui-button label="Save settings" (pressed)="facade.save()" />
+</section>

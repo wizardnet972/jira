@@ -1,0 +1,14 @@
+<section class="grid grid-cols-3 gap-3">
+  <div class="rounded-lg border border-jira-border bg-jira-surface p-4">
+    <span class="block text-[12px] text-jira-subtle">Remaining</span>
+    <strong class="text-[28px] text-jira-navy">{{ remaining() }}</strong>
+  </div>
+  <div class="rounded-lg border border-jira-border bg-jira-surface p-4">
+    <span class="block text-[12px] text-jira-subtle">Completed</span>
+    <strong class="text-[28px] text-jira-navy">{{ completed() }}</strong>
+  </div>
+  <div class="rounded-lg border border-jira-border bg-jira-surface p-4">
+    <span class="block text-[12px] text-jira-subtle">Committed</span>
+    <strong class="text-[28px] text-jira-navy">{{ committed() }}</strong>
+  </div>
+</section>

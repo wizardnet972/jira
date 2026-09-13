@@ -1,0 +1,20 @@
+{
+  "name": "issue-util-priority",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/issue/util/priority/src",
+  "prefix": "issue",
+  "projectType": "library",
+  "tags": ["domain:issue", "type:util"],
+  "targets": {
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "coverage/libs/issue/util/priority"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

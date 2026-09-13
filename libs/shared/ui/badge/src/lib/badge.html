@@ -1,0 +1,16 @@
+<span
+  class="inline-flex rounded-[3px] px-1.5 py-0.5 text-[11px] font-semibold capitalize"
+  [class]="
+    tone() === 'blue'
+      ? 'bg-jira-chip-blue text-jira-blue'
+      : tone() === 'green'
+        ? 'bg-jira-chip-green text-jira-chip-green-fg'
+        : tone() === 'orange'
+          ? 'bg-jira-chip-orange text-jira-chip-orange-fg'
+          : tone() === 'red'
+            ? 'bg-jira-chip-red text-jira-chip-red-fg'
+            : 'bg-jira-column text-jira-muted'
+  "
+>
+  {{ label() }}
+</span>

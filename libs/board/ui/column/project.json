@@ -1,0 +1,20 @@
+{
+  "name": "board-ui-column",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/board/ui/column/src",
+  "prefix": "board",
+  "projectType": "library",
+  "tags": ["domain:board", "type:ui"],
+  "targets": {
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "coverage/libs/board/ui/column"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

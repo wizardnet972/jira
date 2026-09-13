@@ -1,0 +1,20 @@
+{
+  "name": "board-domain",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/board/domain/src",
+  "prefix": "board-domain",
+  "projectType": "library",
+  "tags": ["domain:board", "type:domain-logic"],
+  "targets": {
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "coverage/libs/board/domain"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

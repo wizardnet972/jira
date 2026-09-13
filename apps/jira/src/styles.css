@@ -1,0 +1,92 @@
+@import 'tailwindcss';
+
+@source '../../../libs/**/*.{html,ts}';
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Segoe UI', 'Noto Sans', 'Helvetica Neue', Arial, sans-serif;
+  --color-jira-blue: var(--jira-blue);
+  --color-jira-blue-hover: var(--jira-blue-hover);
+  --color-jira-navy: var(--jira-navy);
+  --color-jira-muted: var(--jira-muted);
+  --color-jira-subtle: var(--jira-subtle);
+  --color-jira-bg: var(--jira-bg);
+  --color-jira-surface: var(--jira-surface);
+  --color-jira-column: var(--jira-column);
+  --color-jira-border: var(--jira-border);
+  --color-jira-sidebar: var(--jira-sidebar);
+  --color-jira-sidebar-hover: var(--jira-sidebar-hover);
+  --color-jira-sidebar-text: var(--jira-sidebar-text);
+  --color-jira-chip-blue: var(--jira-chip-blue-bg);
+  --color-jira-chip-green: var(--jira-chip-green-bg);
+  --color-jira-chip-green-fg: var(--jira-chip-green-fg);
+  --color-jira-chip-orange: var(--jira-chip-orange-bg);
+  --color-jira-chip-orange-fg: var(--jira-chip-orange-fg);
+  --color-jira-chip-red: var(--jira-chip-red-bg);
+  --color-jira-chip-red-fg: var(--jira-chip-red-fg);
+  --color-jira-subtle-hover: var(--jira-subtle-hover);
+}
+
+:root {
+  --jira-blue: #0c66e4;
+  --jira-blue-hover: #0055cc;
+  --jira-navy: #172b4d;
+  --jira-muted: #44546f;
+  --jira-subtle: #626f86;
+  --jira-bg: #f4f6fb;
+  --jira-surface: #ffffff;
+  --jira-column: #e8edf6;
+  --jira-border: #d5dbe7;
+  --jira-sidebar: #ffffff;
+  --jira-sidebar-hover: #f1f3f8;
+  --jira-sidebar-text: #44546f;
+  --jira-chip-blue-bg: #e9f2ff;
+  --jira-chip-green-bg: #dcfff1;
+  --jira-chip-green-fg: #216e4e;
+  --jira-chip-orange-bg: #fff7d6;
+  --jira-chip-orange-fg: #974f0c;
+  --jira-chip-red-bg: #ffeceb;
+  --jira-chip-red-fg: #c9372c;
+  --jira-subtle-hover: #d5dbe7;
+  color-scheme: light;
+}
+
+html.dark {
+  --jira-blue: #4c9aff;
+  --jira-blue-hover: #79b8ff;
+  --jira-navy: #e7eefc;
+  --jira-muted: #9eb0d0;
+  --jira-subtle: #7f93b8;
+  --jira-bg: #07111f;
+  --jira-surface: #0f1c33;
+  --jira-column: #15243d;
+  --jira-border: #2a3d63;
+  --jira-sidebar: #0f1c33;
+  --jira-sidebar-hover: #1a2b48;
+  --jira-sidebar-text: #c5d0e6;
+  --jira-chip-blue-bg: #16325c;
+  --jira-chip-green-bg: #164b35;
+  --jira-chip-green-fg: #7ee2b8;
+  --jira-chip-orange-bg: #4a3410;
+  --jira-chip-orange-fg: #f5c16c;
+  --jira-chip-red-bg: #4a1d1c;
+  --jira-chip-red-fg: #ff9c94;
+  --jira-subtle-hover: #243656;
+  color-scheme: dark;
+}
+
+html,
+body {
+  @apply m-0 min-h-full bg-jira-bg font-sans text-jira-navy antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+input:not([type='checkbox']):not([type='radio']):not([type='button']):not([type='submit']),
+select,
+textarea {
+  background-color: var(--jira-surface);
+  color: var(--jira-navy);
+}

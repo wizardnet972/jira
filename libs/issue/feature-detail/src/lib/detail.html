@@ -1,0 +1,25 @@
+@if (facade.issue(); as issue) {
+  <article class="grid max-w-3xl gap-3">
+    <p class="m-0 font-bold text-jira-blue">{{ issue.key }}</p>
+    <h1 class="m-0 text-3xl font-semibold text-jira-navy">{{ issue.title }}</h1>
+    <p class="m-0 text-[15px] leading-6 text-jira-muted">{{ issue.description }}</p>
+    <div class="flex flex-wrap items-center gap-2">
+      <issue-status [status]="issue.status" />
+      <ui-badge [label]="issue.type" />
+      <ui-badge [label]="issue.priority" tone="orange" />
+      <ui-badge [label]="issue.storyPoints + ' points'" />
+      <span class="text-[13px] text-jira-subtle">Created {{ facade.createdOn() }}</span>
+    </div>
+    <div class="flex flex-wrap items-center gap-4 text-[13px] text-jira-muted">
+      <span class="flex items-center gap-2">Assignee <ui-avatar [initials]="facade.assignee()?.initials || 'UA'" [name]="facade.assignee()?.name || 'Unassigned'" /></span>
+      <span class="flex items-center gap-2">Reporter <ui-avatar [initials]="facade.reporter()?.initials || 'NA'" [name]="facade.reporter()?.name || ''" /></span>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      @for (status of facade.statuses; track status) {
+        <ui-button [label]="'Move to ' + status" variant="subtle" (pressed)="facade.move(status)" />
+      }
+    </div>
+  </article>
+} @else {
+  <ui-empty-state title="Issue not found" message="That work item is not in the current project." />
+}

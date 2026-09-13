@@ -1,0 +1,20 @@
+{
+  "name": "sprint-domain",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/sprint/domain/src",
+  "prefix": "sprint-domain",
+  "projectType": "library",
+  "tags": ["domain:sprint", "type:domain-logic"],
+  "targets": {
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "coverage/libs/sprint/domain"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}
