@@ -47,3 +47,5 @@ Thumbs.db
 .angular
 
 vitest.config.*.timestamp*
+
+how-i-built-jira-with-nx-domainify.md
